@@ -4,153 +4,346 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>notrefu-mirror — ton téléphone Android sur PC</title>
-<meta name="description" content="Affiche l'écran de ton téléphone Android sur PC (USB ou Wi-Fi) pour jouer à Dofus Touch en multi-comptes. Linux et Windows. Projet indépendant, open source.">
+<meta name="description" content="Affiche l'écran de ton téléphone Android sur PC (USB ou Wi-Fi) pour jouer à Dofus Touch en multi-comptes : une session par onglet, clavier et souris. Linux et Windows, gratuit et open source. Projet indépendant, non affilié à Ankama.">
+<meta property="og:title" content="notrefu-mirror — ton téléphone Android sur PC">
+<meta property="og:description" content="Multi-sessions, clavier et souris, USB ou Wi-Fi. Linux et Windows, open source.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/session.png">
+<meta name="theme-color" content="#0e0b16">
+<link rel="icon" type="image/png" href="img/logo.png">
 <style>
   :root {
     --bg: #0e0b16;
-    --panel: #171226;
+    --bg-2: #130f20;
+    --panel: #181327;
     --line: #2b2342;
     --text: #ece8f6;
-    --muted: #a69ec0;
+    --muted: #a8a0c2;
     --accent: #8b5cf6;
     --accent-2: #22d3ee;
+    --ok: #4ade80;
+    --radius: 14px;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
-    font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font: 17px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
   a { color: var(--accent-2); }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
-  header.top { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
-  header.top .brand { white-space: nowrap; font-weight: 700; letter-spacing: .2px; font-size: 18px; }
-  header.top nav a { margin-left: 22px; color: var(--muted); text-decoration: none; font-size: 15px; }
-  header.top nav a:hover { color: var(--text); }
+  img { max-width: 100%; height: auto; display: block; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+  :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
 
-  .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; padding: 56px 0 72px; }
-  h1 { font-size: clamp(34px, 5.4vw, 56px); line-height: 1.08; margin: 0 0 18px; letter-spacing: -.02em; }
-  .lead { color: var(--muted); font-size: 19px; margin: 0 0 30px; max-width: 34em; }
-  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  /* navigation */
+  .nav { position: sticky; top: 0; z-index: 10; background: rgba(14,11,22,.86); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); text-decoration: none; white-space: nowrap; }
+  .brand img { width: 28px; height: 28px; border-radius: 7px; }
+  .nav nav { display: flex; align-items: center; gap: 22px; }
+  .nav nav a { color: var(--muted); text-decoration: none; font-size: 15px; }
+  .nav nav a:hover { color: var(--text); }
+  .nav .dl { color: #fff; background: var(--accent); padding: 7px 14px; border-radius: 8px; font-weight: 600; }
+  .nav .dl:hover { filter: brightness(1.12); color: #fff; }
+
+  /* hero */
+  .hero { padding: 74px 0 40px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; left: 50%; top: -120px; width: 900px; height: 560px; transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(139,92,246,.30), transparent); pointer-events: none;
+  }
+  .hero > .wrap { position: relative; }
+  h1 { font-size: clamp(36px, 6vw, 62px); line-height: 1.06; margin: 0 auto 20px; letter-spacing: -.025em; max-width: 14em; }
+  .lead { color: var(--muted); font-size: 20px; margin: 0 auto 32px; max-width: 36em; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
   .btn {
-    display: inline-block; padding: 13px 22px; border-radius: 10px; font-weight: 600;
-    text-decoration: none; border: 1px solid var(--line); color: var(--text); background: var(--panel);
+    display: inline-flex; align-items: center; gap: 9px; padding: 14px 24px; border-radius: 11px; font-weight: 600;
+    text-decoration: none; border: 1px solid var(--line); color: var(--text); background: var(--panel); font-size: 17px;
   }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn:hover { filter: brightness(1.12); }
-  .note { color: var(--muted); font-size: 14px; margin-top: 14px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 8px 30px rgba(139,92,246,.35); }
+  .btn:hover { filter: brightness(1.14); }
+  .meta { color: var(--muted); font-size: 14px; margin-top: 16px; }
+  .shot { margin: 52px auto 0; max-width: 980px; border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden;
+          box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(139,92,246,.18); }
+  .shot img { width: 100%; height: auto; }
+  .caption { color: var(--muted); font-size: 14px; margin: 12px 0 0; }
 
-  /* petite maquette : un téléphone qui se reflète dans une fenêtre */
-  .mock { position: relative; height: 300px; }
-  .phone {
-    position: absolute; left: 0; top: 30px; width: 108px; height: 220px; border-radius: 20px;
-    border: 3px solid #3a3058; background: linear-gradient(160deg, #241a45, #120d26);
-  }
-  .phone::before { content: ""; position: absolute; top: 8px; left: 50%; width: 30px; height: 5px; margin-left: -15px; border-radius: 3px; background: #3a3058; }
-  .win {
-    position: absolute; right: 0; top: 0; width: 262px; height: 290px; border-radius: 12px;
-    border: 1px solid var(--line); background: var(--panel); overflow: hidden;
-  }
-  .win .bar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
-  .win .bar i { width: 10px; height: 10px; border-radius: 50%; background: #3a3058; }
-  .win .tabs { display: flex; gap: 6px; padding: 10px 12px 0; }
-  .win .tabs span { white-space: nowrap; font-size: 12px; padding: 4px 10px; border-radius: 8px 8px 0 0; background: #221a3a; color: var(--muted); }
-  .win .tabs span.on { background: var(--accent); color: #fff; }
-  .win .screen { margin: 0 12px 12px; height: 188px; border-radius: 0 8px 8px 8px; background: linear-gradient(160deg, #241a45, #120d26); border: 1px solid var(--line); }
+  /* chiffres */
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-2); margin-top: 64px; }
+  .fact { padding: 22px 24px; border-right: 1px solid var(--line); }
+  .fact:last-child { border-right: 0; }
+  .fact b { display: block; font-size: 22px; letter-spacing: -.01em; }
+  .fact span { color: var(--muted); font-size: 15px; }
 
-  section { padding: 54px 0; border-top: 1px solid var(--line); }
-  h2 { font-size: 28px; margin: 0 0 26px; letter-spacing: -.01em; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+  section { padding: 84px 0 10px; }
+  h2 { font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 12px; letter-spacing: -.02em; line-height: 1.15; }
+  .sub { color: var(--muted); margin: 0 0 34px; max-width: 40em; }
+
+  /* blocs alternés avec captures */
+  .row { display: grid; grid-template-columns: 1fr 1.25fr; gap: 44px; align-items: center; margin: 44px 0; }
+  .row.flip { grid-template-columns: 1.25fr 1fr; }
+  .row.flip .txt { order: 2; }
+  .row h3 { font-size: 24px; margin: 0 0 10px; letter-spacing: -.015em; }
+  .row p { color: var(--muted); margin: 0 0 12px; }
+  .row ul { margin: 0; padding-left: 20px; color: var(--muted); }
+  .row li { margin-bottom: 6px; }
+  .row .pic { border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.45); }
+
+  /* cartes */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px 24px; }
   .card h3 { margin: 0 0 6px; font-size: 18px; }
   .card p { margin: 0; color: var(--muted); font-size: 16px; }
 
-  ol.steps { margin: 0; padding-left: 22px; }
-  ol.steps li { margin-bottom: 12px; }
-  code { background: #1d1733; border: 1px solid var(--line); padding: 2px 7px; border-radius: 6px; font-size: .92em; }
+  /* schéma */
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center; margin-top: 10px; }
+  .node { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; text-align: center; }
+  .node b { display: block; margin-bottom: 4px; }
+  .node span { color: var(--muted); font-size: 15px; }
+  .link { color: var(--accent-2); font-size: 22px; text-align: center; }
 
-  .rules { background: var(--panel); border-left: 4px solid var(--accent); border-radius: 8px; padding: 18px 22px; }
-  .rules p { margin: 0 0 8px; }
+  /* qualité */
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  th, td { text-align: left; padding: 13px 18px; border-bottom: 1px solid var(--line); font-size: 16px; }
+  th { color: var(--muted); font-weight: 600; font-size: 14px; background: var(--bg-2); }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child { font-weight: 600; }
+  .tablewrap { overflow-x: auto; }
+
+  /* téléchargement */
+  .dls { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .dl-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+  .dl-card h3 { margin: 0 0 4px; font-size: 22px; }
+  .dl-card p { color: var(--muted); margin: 0 0 18px; font-size: 16px; }
+  .dl-card .btn { width: 100%; justify-content: center; }
+  .steps { margin: 18px 0 0; padding-left: 20px; color: var(--muted); font-size: 15.5px; }
+  .steps li { margin-bottom: 8px; }
+  code { background: #1d1733; border: 1px solid var(--line); padding: 2px 7px; border-radius: 6px; font-size: .9em; color: var(--text); }
+  .tip { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px; margin-top: 20px; color: var(--muted); font-size: 16px; }
+  .tip b { color: var(--text); }
+
+  /* FAQ */
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 4px 22px; margin-bottom: 10px; }
+  summary { cursor: pointer; padding: 14px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--accent); font-size: 22px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { color: var(--muted); margin: 0 0 16px; }
+
+  .rules { background: linear-gradient(135deg, rgba(139,92,246,.14), rgba(34,211,238,.06)); border: 1px solid rgba(139,92,246,.4); border-radius: var(--radius); padding: 28px 30px; }
+  .rules h2 { font-size: 26px; }
+  .rules p { color: #cfc8e6; margin: 0 0 10px; }
   .rules p:last-child { margin: 0; }
 
-  footer { border-top: 1px solid var(--line); padding: 30px 0 50px; color: var(--muted); font-size: 14px; }
+  footer { margin-top: 90px; border-top: 1px solid var(--line); padding: 34px 0 56px; color: var(--muted); font-size: 14.5px; }
+  footer .cols { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; }
 
-  @media (max-width: 760px) {
-    .hero { grid-template-columns: 1fr; padding-top: 28px; gap: 30px; }
-    .mock { height: 240px; max-width: 380px; }
-    .win { width: 230px; height: 240px; }
-    .win .screen { height: 140px; }
-    .phone { height: 180px; width: 90px; top: 30px; }
-    header.top nav a { margin-left: 12px; font-size: 14px; }
-    .win .tabs span { padding: 4px 7px; font-size: 11px; }
+  @media (max-width: 820px) {
+    .row, .row.flip { grid-template-columns: 1fr; gap: 22px; margin: 36px 0; }
+    .row.flip .txt { order: 0; }
+    .flow { grid-template-columns: 1fr; }
+    .link { transform: rotate(90deg); }
+    .fact { border-right: 0; border-bottom: 1px solid var(--line); }
+    .fact:last-child { border-bottom: 0; }
+    .nav nav a:not(.dl) { display: none; }
+    .hero { padding-top: 46px; }
+    section { padding-top: 62px; }
   }
   @media (prefers-reduced-motion: no-preference) { .btn { transition: filter .15s; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div class="brand">notrefu-mirror</div>
-    <nav><a href="#fonctions">Fonctions</a><a href="#demarrer">Démarrer</a><a href="https://github.com/notrefu/notrefu-mirror">GitHub</a></nav>
-  </header>
 
-  <main>
-    <div class="hero">
-      <div>
-        <h1>Ton téléphone Android, dans une fenêtre sur ton PC.</h1>
-        <p class="lead">Joue à Dofus Touch en multi-comptes : une session par onglet, clavier et souris, par USB ou Wi-Fi. Gratuit, open source, sans installation.</p>
-        <div class="cta">
-          <a class="btn primary" href="https://github.com/notrefu/notrefu-mirror/releases/latest">Télécharger pour Windows</a>
-          <a class="btn" href="https://github.com/notrefu/notrefu-mirror/releases/latest">Télécharger pour Linux</a>
-        </div>
-        <p class="note">Le jeu tourne sur ton téléphone ; l'application ne fait que l'afficher et transmettre tes clics et tes touches.</p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="img/logo.png" alt="" width="28" height="28">notrefu-mirror</a>
+    <nav>
+      <a href="#fonctions">Fonctions</a>
+      <a href="#qualite">Qualité</a>
+      <a href="#telecharger">Télécharger</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/notrefu/notrefu-mirror">GitHub</a>
+      <a class="dl" href="#telecharger">Télécharger</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <h1>Ton téléphone Android, dans une fenêtre sur ton PC.</h1>
+      <p class="lead">Joue à Dofus Touch en multi-comptes : une session par onglet, clavier et souris, par USB ou Wi-Fi. Gratuit, open source, rien à installer.</p>
+      <div class="cta">
+        <a class="btn primary" href="#telecharger">Télécharger</a>
+        <a class="btn" href="https://github.com/notrefu/notrefu-mirror">Voir le code source</a>
       </div>
-      <div class="mock" aria-hidden="true">
-        <div class="phone"></div>
-        <div class="win">
-          <div class="bar"><i></i><i></i><i></i></div>
-          <div class="tabs"><span class="on">Compte 1</span><span>Compte 2</span><span>Compte 3</span></div>
-          <div class="screen"></div>
-        </div>
+      <p class="meta">Windows et Linux · Licence MIT · Projet indépendant, non affilié à Ankama</p>
+
+      <figure class="shot" style="margin-bottom:0">
+        <img src="img/session.png" alt="Fenêtre de notrefu-mirror avec une session en cours : onglets, barre d'outils et écran du téléphone" width="1280" height="800">
+      </figure>
+      <p class="caption">L'interface réelle de l'application. L'écran affiché ici est une image de démonstration.</p>
+
+      <div class="facts">
+        <div class="fact"><b>8 sessions</b><span>en onglets, une par compte</span></div>
+        <div class="fact"><b>USB ou Wi-Fi</b><span>reconnexion automatique</span></div>
+        <div class="fact"><b>1 touche = 1 tap</b><span>sur la session active seulement</span></div>
+        <div class="fact"><b>0 automatisation</b><span>aucune macro, aucun bot</span></div>
       </div>
     </div>
+  </div>
 
-    <section id="fonctions">
-      <h2>Ce que ça fait</h2>
-      <div class="grid">
-        <div class="card"><h3>Plusieurs comptes</h3><p>Chaque téléphone ou tablette a sa session dans un onglet, avec son emblème, ses réglages et sa qualité vidéo.</p></div>
-        <div class="card"><h3>Clavier et souris</h3><p>Touches personnalisables : un appui égale un seul tap, uniquement sur la session active.</p></div>
-        <div class="card"><h3>USB ou Wi-Fi</h3><p>Branche le câble ou connecte-toi sans fil. La reconnexion se fait toute seule si le lien coupe.</p></div>
-        <div class="card"><h3>Fluide et léger</h3><p>Décodage matériel quand il est disponible, sessions masquées économisées, suivi batterie, chauffe, CPU et RAM.</p></div>
-        <div class="card"><h3>Enregistrement</h3><p>Capture vidéo et copie d'écran en un clic, son du jeu transféré sur Android 11 et plus.</p></div>
-        <div class="card"><h3>Linux et Windows</h3><p>AppImage pour Linux, version portable pour Windows : décompresse et lance.</p></div>
+  <section id="fonctions">
+    <div class="wrap">
+      <h2>Tout ce qu'il faut pour jouer sur plusieurs comptes</h2>
+      <p class="sub">Le jeu tourne sur ton téléphone. notrefu-mirror affiche son écran dans une fenêtre et transmet tes clics et tes touches, comme une télécommande.</p>
+
+      <div class="flow" aria-label="Fonctionnement">
+        <div class="node"><b>Téléphone</b><span>Le jeu officiel, non modifié</span></div>
+        <div class="link">⇄</div>
+        <div class="node"><b>USB ou Wi-Fi</b><span>adb + scrcpy intégrés</span></div>
+        <div class="link">⇄</div>
+        <div class="node"><b>Ton PC</b><span>Une fenêtre par session</span></div>
       </div>
-    </section>
 
-    <section id="demarrer">
-      <h2>Démarrer en 4 étapes</h2>
-      <ol class="steps">
-        <li>Sur le téléphone : active les options pour les développeurs puis le <strong>débogage USB</strong>.</li>
-        <li>Télécharge la dernière version depuis la <a href="https://github.com/notrefu/notrefu-mirror/releases/latest">page des releases</a>.</li>
-        <li><strong>Windows</strong> : décompresse le zip et lance <code>notrefu-mirror.exe</code>. <strong>Linux</strong> : <code>chmod +x</code> sur l'AppImage puis lance-la.</li>
-        <li>Branche le téléphone, autorise l'ordinateur, et clique sur <strong>Démarrer</strong>.</li>
-      </ol>
-      <p class="note">Sur Windows, la version n'est pas signée : si l'écran « Windows a protégé votre ordinateur » apparaît, clique sur « Informations complémentaires » puis « Exécuter quand même ».</p>
-    </section>
+      <div class="row">
+        <div class="txt">
+          <h3>Un réglage clair, session par session</h3>
+          <p>Choisis le téléphone, le nom, l'emblème de l'onglet et la qualité. Tout est enregistré, et les sessions se rouvrent comme tu les as laissées.</p>
+          <ul>
+            <li>Détection automatique des téléphones et tablettes</li>
+            <li>Aide ciblée selon la marque (Samsung, Xiaomi/POCO, Oppo…)</li>
+            <li>Lancement automatique du jeu à la connexion</li>
+          </ul>
+        </div>
+        <div class="pic"><img src="img/reglages.png" alt="Écran de réglages d'une session : téléphone, jeu et qualité" width="1280" height="800" loading="lazy"></div>
+      </div>
 
-    <section>
-      <h2>Respect des règles du jeu</h2>
+      <div class="row flip">
+        <div class="txt">
+          <h3>Pense à ton téléphone</h3>
+          <p>Les options protègent la batterie et la chauffe pendant les longues sessions.</p>
+          <ul>
+            <li>Éteindre l'écran du téléphone pendant la session</li>
+            <li>Empêcher la mise en veille (USB) et couper les notifications</li>
+            <li>Son du jeu seul, avec une latence réglable</li>
+            <li>Fermeture du jeu à l'arrêt de la session</li>
+          </ul>
+        </div>
+        <div class="pic"><img src="img/options.png" alt="Options d'une session : son, téléphone, contrôle" width="1280" height="800" loading="lazy"></div>
+      </div>
+
+      <div class="grid" style="margin-top:56px">
+        <div class="card"><h3>Clavier personnalisable</h3><p>Associe des touches à des endroits de l'écran. Un appui envoie un seul tap, uniquement à la session au premier plan.</p></div>
+        <div class="card"><h3>Reconnexion automatique</h3><p>Si le lien coupe, la session se relance seule, avec des délais progressifs pour les appareils en veille.</p></div>
+        <div class="card"><h3>Léger pour le PC</h3><p>Décodage matériel quand il est disponible, sessions masquées sans dessin inutile, pas de navigateur intégré chargé au démarrage.</p></div>
+        <div class="card"><h3>Santé du téléphone</h3><p>Batterie, chauffe, stockage, CPU et RAM de l'appareil, avec alertes. Détail de la RAM au survol de la souris.</p></div>
+        <div class="card"><h3>Captures et vidéo</h3><p>Capture d'écran et enregistrement en un clic, directement depuis la barre d'outils de la session.</p></div>
+        <div class="card"><h3>Vue en grille</h3><p>Affiche plusieurs sessions côte à côte, avec des espaces enregistrés pour rouvrir un groupe de comptes.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="qualite">
+    <div class="wrap">
+      <h2>Qualité vidéo selon ta connexion</h2>
+      <p class="sub">Six préréglages, du plus économe au plus net. Chacun fixe le débit, les images par seconde et la taille de l'écran envoyé par le téléphone.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Préréglage</th><th>Débit</th><th>Images / s</th><th>Écran</th><th>Pour qui</th></tr></thead>
+          <tbody>
+            <tr><td>Faible</td><td>2 Mbit/s</td><td>30</td><td>960×540</td><td>Wi-Fi limité, beaucoup de comptes</td></tr>
+            <tr><td>Moyen</td><td>4 Mbit/s</td><td>45</td><td>1280×720</td><td>Bon compromis (par défaut)</td></tr>
+            <tr><td>Haut</td><td>8 Mbit/s</td><td>60</td><td>1920×1080</td><td>Un ou deux comptes, USB</td></tr>
+            <tr><td>Ultra</td><td>16 Mbit/s</td><td>60</td><td>2560×1440</td><td>Image la plus nette, USB recommandé</td></tr>
+            <tr><td>Multi-compte</td><td>4 Mbit/s</td><td>30</td><td>1280×720</td><td>Plusieurs téléphones à la fois</td></tr>
+            <tr><td>Perso</td><td>au choix</td><td>au choix</td><td>au choix</td><td>Tes propres valeurs</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="telecharger">
+    <div class="wrap">
+      <h2>Télécharger</h2>
+      <p class="sub">Aucune installation : un fichier à décompresser ou à lancer. Les versions sont publiées sur GitHub.</p>
+      <div class="dls">
+        <div class="dl-card">
+          <h3>Windows</h3>
+          <p>Version portable (zip), sans droits administrateur.</p>
+          <a class="btn primary" href="https://github.com/notrefu/notrefu-mirror/releases/latest">Télécharger le zip Windows</a>
+          <ol class="steps">
+            <li>Décompresse le zip dans un dossier.</li>
+            <li>Lance <code>notrefu-mirror.exe</code>.</li>
+            <li>Si Windows affiche « Windows a protégé votre ordinateur », clique sur « Informations complémentaires » puis « Exécuter quand même » (la version n'est pas signée).</li>
+          </ol>
+        </div>
+        <div class="dl-card">
+          <h3>Linux</h3>
+          <p>AppImage : un seul fichier, pensé pour Bazzite (KDE).</p>
+          <a class="btn primary" href="https://github.com/notrefu/notrefu-mirror/releases/latest">Télécharger l'AppImage</a>
+          <ol class="steps">
+            <li>Rends le fichier exécutable : <code>chmod +x notrefu-mirror-*.AppImage</code></li>
+            <li>Lance-le : <code>./notrefu-mirror-*.AppImage</code></li>
+            <li>Si l'AppImage refuse de se monter, ajoute <code>--appimage-extract-and-run</code>.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="tip"><b>Sur le téléphone :</b> active les options pour les développeurs, puis le <b>débogage USB</b> (ou le débogage sans fil). Branche le câble, accepte la fenêtre d'autorisation, et le téléphone apparaît dans la liste. Sur Windows, si rien n'apparaît, installe le pilote USB du constructeur ou utilise le Wi-Fi.</div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2>Questions fréquentes</h2>
+      <p class="sub">Les réponses aux questions qui reviennent le plus.</p>
+
+      <details>
+        <summary>Est-ce autorisé par Ankama ?</summary>
+        <p>notrefu-mirror n'émule rien et ne modifie pas le jeu : l'application officielle tourne sur ton téléphone et l'écran est simplement affiché sur ton PC. Il n'y a aucune automatisation. Je ne peux toutefois pas garantir l'absence de sanction : Ankama reste seul juge de ses règles. En cas de doute, demande à son support.</p>
+      </details>
+      <details>
+        <summary>Pourquoi mon téléphone n'apparaît pas ?</summary>
+        <p>Vérifie que le débogage USB est activé, que le câble transmet bien les données (pas un câble de charge seule) et que tu as accepté la fenêtre d'autorisation sur le téléphone. Dans le menu Aide, le diagnostic affiche ce que l'application voit et propose une aide selon la marque.</p>
+      </details>
+      <details>
+        <summary>Les clics sont ignorés sur mon Xiaomi / POCO.</summary>
+        <p>Active « Débogage USB (Paramètres de sécurité) » dans les options pour les développeurs. Une carte SIM et un compte Mi sont requis par Xiaomi pour cette option.</p>
+      </details>
+      <details>
+        <summary>Puis-je jouer sans fil ?</summary>
+        <p>Oui, par le débogage sans fil d'Android (Wi-Fi). Le câble USB reste plus stable et permet la meilleure qualité ; la reconnexion automatique rattrape les coupures.</p>
+      </details>
+      <details>
+        <summary>Mes réglages sont-ils conservés après une mise à jour ?</summary>
+        <p>Oui. Les sessions, les touches personnalisées et le thème sont enregistrés, et ceux d'une ancienne version (MirrorDeck) sont repris automatiquement au premier lancement.</p>
+      </details>
+      <details>
+        <summary>Pourquoi Windows ou mon antivirus se méfie-t-il ?</summary>
+        <p>La version Windows n'est pas signée numériquement (la signature est payante). Le code est public sur GitHub et les fichiers publiés peuvent être vérifiés : tu peux aussi reconstruire l'application toi-même.</p>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
       <div class="rules">
+        <h2>Respect des règles du jeu</h2>
         <p>notrefu-mirror ne fait <strong>aucune automatisation</strong> : pas de macro, pas de clic automatique, pas de lecture de l'écran du jeu, pas d'envoi d'une même touche à plusieurs comptes. Un clic ou une touche égale une action de ta part sur un seul compte.</p>
-        <p>Projet indépendant, <strong>non affilié à Ankama</strong>. Le jeu reste l'application officielle, non modifiée, sur ton téléphone. Ankama reste seul juge de ses règles : en cas de doute, demande à son support.</p>
+        <p>Projet indépendant, <strong>non affilié à Ankama</strong>. Le jeu reste l'application officielle, non modifiée, sur ton téléphone.</p>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+</main>
 
-  <footer>
-    notrefu-mirror — licence MIT, auteur notrefu. Utilise scrcpy et adb (Apache-2.0), Qt for Python (LGPL), PyAV/FFmpeg.
-    <br><a href="https://github.com/notrefu/notrefu-mirror">Code source sur GitHub</a>
-  </footer>
-</div>
+<footer>
+  <div class="wrap cols">
+    <div>notrefu-mirror — licence MIT, auteur notrefu.<br>Utilise scrcpy et adb (Apache-2.0), Qt for Python (LGPL), PyAV / FFmpeg.</div>
+    <div><a href="https://github.com/notrefu/notrefu-mirror">Code source</a> · <a href="https://github.com/notrefu/notrefu-mirror/releases">Versions</a> · <a href="https://github.com/notrefu/notrefu-mirror/issues">Signaler un problème</a></div>
+  </div>
+</footer>
+
 </body>
 </html>
