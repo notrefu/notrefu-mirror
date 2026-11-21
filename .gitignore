@@ -1,0 +1,27 @@
+# builds et artefacts
+build/
+dist/
+*.AppImage
+*.AppImage.part*
+*.zip
+*.tar.gz
+SHA256SUMS*
+# caches Python / outils
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+# logs et fichiers temporaires
+*.log
+*.tmp
+nohup.out
+# configuration locale et données personnelles
+.env
+*.local
+.idea/
+.vscode/
+# emblèmes personnels (non redistribuables)
+src/notrefu_mirror/resources/classes/*.png

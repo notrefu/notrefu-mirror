@@ -1,0 +1,15 @@
+notrefu-mirror embarque des logiciels tiers, distribués sous leurs propres licences :
+
+- scrcpy (Genymobile / Romain Vimont) - Apache License 2.0 - https://github.com/Genymobile/scrcpy
+  (le fichier LICENSE de scrcpy est dans usr/lib/scrcpy/LICENSE)
+- adb, Android SDK Platform-Tools (Google) - Apache License 2.0
+- Qt for Python (PySide6) - LGPL v3 - https://doc.qt.io/qtforpython-6/
+- PyAV (décodage vidéo) - BSD 3-clauses ; embarque FFmpeg (LGPL v2.1+) - https://pyav.basswood-io.com/
+- Qt WebEngine / Chromium (onglet Guides, chargé à la demande) - LGPL v3 / BSD
+- CPython (python-build-standalone) - PSF License
+
+Code de notrefu-mirror (auteur : notrefu) : licence MIT (fichier LICENSE à la racine du dépôt).
+
+notrefu-mirror n'embarque aucune image, icône ou ressource d'un jeu ou d'un éditeur tiers.
+notrefu-mirror est un projet indépendant : il n'est affilié ni à Ankama, ni à un site tiers.
+Il ne fait que piloter scrcpy : pas d'émulation, pas d'automatisation du jeu.

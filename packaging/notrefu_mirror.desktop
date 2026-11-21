@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=notrefu-mirror
+GenericName=Réplication d'écran Android
+Comment=Afficher et piloter un téléphone Android sur le PC (scrcpy)
+Comment[en]=Mirror and control an Android phone on your PC (scrcpy)
+Exec=AppRun
+Icon=notrefu_mirror
+Terminal=false
+Categories=Utility;
+Keywords=android;scrcpy;mirroring;miroir;adb;
+StartupWMClass=notrefu_mirror

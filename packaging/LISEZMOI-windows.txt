@@ -1,0 +1,13 @@
+notrefu-mirror pour Windows (version portable)
+==========================================
+
+1. Dézippe le dossier où tu veux (pas besoin d'installation, pas besoin d'être administrateur).
+2. Double-clique sur notrefu-mirror.exe (tu peux l'épingler à la barre des tâches ou en faire un raccourci sur le Bureau).
+   - Windows peut afficher « Windows a protégé votre ordinateur » : clique sur « Informations complémentaires » puis « Exécuter quand même ».
+   - Le pare-feu peut demander une autorisation pour adb : accepte (réseau privé).
+3. Sur le téléphone : active les options pour les développeurs puis le « Débogage USB » (ou le débogage sans fil).
+4. Branche le câble USB et autorise l'ordinateur sur le téléphone. Si le téléphone n'apparaît pas :
+   installe le pilote USB du constructeur (Xiaomi / Poco : « Mi USB Driver »), ou utilise le Wi-Fi.
+
+Un problème ? Double-clique sur Diagnostic.bat : il affiche ce que notrefu-mirror voit (adb, décodeur, téléphones).
+Version Windows expérimentale : certaines choses peuvent différer de la version Linux.

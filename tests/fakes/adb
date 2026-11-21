@@ -1,0 +1,29 @@
+#!/bin/sh
+# Faux adb pour les tests
+args="$*"
+case "$args" in
+  *"shell pm path"*) echo "package:$(cd "$(dirname "$0")" && pwd)/~~abc==/com.x-1==/base.apk" ;;
+  *"shell wc -c"*) wc -c < "$(dirname "$0")/~~abc==/com.x-1==/base.apk" ;;
+  *"exec-out tail"*) eval "${args#*exec-out }" ;;
+  *" push "*) : ;;
+  *"forward --remove"*) : ;;
+  *"forward tcp:0"*) echo "$FAKE_PORT" ;;
+  *"app_process"*) exec sleep 60 ;;
+  "devices") printf 'List of devices attached\nFAKESERIAL01\tdevice\n' ;;
+  *"shell echo ok"*) echo ok ;;
+  *"forward --list"*) : ;;
+  *"shell ps -A"*) : ;;
+  *"devices -l"*) printf 'List of devices attached\nFAKESERIAL01 device usb:1-2 product:a52 model:SM_A525F device:a52q transport_id:1\n' ;;
+  *"getprop ro.product.manufacturer"*) echo "samsung" ;;
+  *"getprop ro.product.model"*) echo "SM-A525F" ;;
+  *"getprop ro.build.version.release"*) echo "13" ;;
+  *"getprop ro.build.version.sdk"*) echo "${FAKE_SDK:-33}" ;;
+  *"wm size reset"*|*"wm density reset"*) : ;;
+  *"wm size "[0-9]*|*"wm density "[0-9]*) : ;;
+  *"wm size"*) printf 'Physical size: 1080x2400\nOverride size: 720x1600\n' ;;
+  *"wm density"*) printf 'Physical density: 420\n' ;;
+  *"ip -f inet addr show wlan0"*) echo "    inet 192.168.1.42/24 brd 192.168.1.255 scope global wlan0" ;;
+  *"tcpip 5555"*) echo "restarting in TCP mode port: 5555" ;;
+  *"connect 192.168.1.42:5555"*) echo "connected to 192.168.1.42:5555" ;;
+  *) echo "fake adb: $args" ;;
+esac

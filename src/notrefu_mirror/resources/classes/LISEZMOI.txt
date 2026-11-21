@@ -1,0 +1,6 @@
+Emblèmes de classe (facultatif)
+--------------------------------
+notrefu-mirror n'embarque aucune image protégée. Pour utiliser vos propres emblèmes d'onglet, déposez ici
+des images 01.png … 15.png (dans l'ordre : Cra, Écaflip, Eniripsa, Enutrof, Féca, Steamer, Iop, Zobal,
+Osamodas, Pandawa, Roublard, Sacrieur, Sadida, Sram, Xélor).
+Sans ces fichiers, notrefu-mirror affiche des pastilles colorées avec l'initiale de la classe.

@@ -1,0 +1,12 @@
+#!/bin/sh
+echo "scrcpy 5.0.1 (fake)"
+echo "ARGS: $*"
+case "$*" in
+  *--list-apps*) printf "scrcpy 5.0.1 (fake)\n[server] INFO: List of apps:\n * Chrome                      com.android.chrome\n * Dofus Touch                 com.ankama.dofustouch\n - Dofus Touch 2               com.ankama.dofustouch2\n"; exit 0 ;;
+esac
+case "$*" in
+  *FAIL*) echo "ERROR: Could not find any ADB device"; exit 1 ;;
+esac
+trap 'echo "terminated"; exit 0' TERM INT
+i=0
+while true; do echo "INFO: 59 fps"; sleep 0.3 & wait $!; done
