@@ -139,6 +139,36 @@
   footer { margin-top: 90px; border-top: 1px solid var(--line); padding: 34px 0 56px; color: var(--muted); font-size: 14.5px; }
   footer .cols { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; }
 
+
+  /* thèmes */
+  .themes-pick { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+  .tbtn { display: inline-flex; align-items: center; gap: 9px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font: inherit; font-size: 15px; cursor: pointer; }
+  .tbtn:hover { border-color: #4a3d70; }
+  .tbtn[aria-pressed="true"] { border-color: var(--accent); background: #211a38; }
+  .dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); display: inline-block; }
+  .themeshot { max-width: 880px; border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.45); }
+  .themeshot img { width: 100%; height: auto; transition: opacity .18s; }
+
+  /* raccourcis */
+  .keys { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 720px) { .keys { grid-template-columns: 1fr; } }
+  .keys .card h3 { margin-bottom: 12px; }
+  .krow { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 15.5px; color: var(--muted); }
+  .krow:first-of-type { border-top: 0; }
+  kbd { font: 600 13px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--text); background: #221b38; border: 1px solid #3a3058; border-bottom-width: 2px; border-radius: 6px; padding: 5px 8px; white-space: nowrap; }
+
+  /* guides */
+  .guides { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .sites { display: grid; gap: 12px; margin-top: 18px; }
+  .site { display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; color: var(--text); }
+  .site:hover { border-color: var(--accent); }
+  .site b { display: block; }
+  .site span { color: var(--muted); font-size: 14.5px; word-break: break-all; }
+  .barpic { border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; background: var(--panel); padding: 22px; }
+  .barpic img { margin: 0 auto 14px; border-radius: 8px; }
+  .barpic p { color: var(--muted); font-size: 15px; margin: 0; text-align: center; }
+  @media (max-width: 820px) { .guides { grid-template-columns: 1fr; gap: 24px; } }
+
   @media (max-width: 820px) {
     .row, .row.flip { grid-template-columns: 1fr; gap: 22px; margin: 36px 0; }
     .row.flip .txt { order: 0; }
@@ -160,6 +190,9 @@
     <a class="brand" href="#"><img src="img/logo.png" alt="" width="28" height="28">notrefu-mirror</a>
     <nav>
       <a href="#fonctions">Fonctions</a>
+      <a href="#themes">Thèmes</a>
+      <a href="#raccourcis">Raccourcis</a>
+      <a href="#guides">Guides</a>
       <a href="#qualite">Qualité</a>
       <a href="#telecharger">Télécharger</a>
       <a href="#faq">FAQ</a>
@@ -241,6 +274,73 @@
         <div class="card"><h3>Santé du téléphone</h3><p>Batterie, chauffe, stockage, CPU et RAM de l'appareil, avec alertes. Détail de la RAM au survol de la souris.</p></div>
         <div class="card"><h3>Captures et vidéo</h3><p>Capture d'écran et enregistrement en un clic, directement depuis la barre d'outils de la session.</p></div>
         <div class="card"><h3>Vue en grille</h3><p>Affiche plusieurs sessions côte à côte, avec des espaces enregistrés pour rouvrir un groupe de comptes.</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="themes">
+    <div class="wrap">
+      <h2>Dix thèmes, au choix</h2>
+      <p class="sub">Change l'ambiance en un clic dans Réglages → Thème : fonds, boutons et couleur d'accent suivent. Clique ci-dessous pour voir chaque thème dans l'application.</p>
+      <div class="themes-pick" id="tpick" role="group" aria-label="Choisir un thème"></div>
+      <div class="themeshot"><img id="timg" src="img/themes/zinc.png" alt="Aperçu du thème Zinc violet dans notrefu-mirror" width="960" height="600" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section id="raccourcis">
+    <div class="wrap">
+      <h2>Raccourcis clavier</h2>
+      <p class="sub">Pour passer d'un compte à l'autre sans quitter le clavier. Tous les raccourcis sont modifiables dans l'application (bouton « Raccourcis ») et un conflit est signalé. Ils sont lus par notrefu-mirror quand sa fenêtre est active : ils ne sont jamais envoyés au jeu.</p>
+      <div class="keys">
+        <div class="card">
+          <h3>Sessions</h3>
+          <div class="krow"><span>Session suivante</span><kbd>Ctrl + Tab</kbd></div>
+          <div class="krow"><span>Session précédente</span><kbd>Ctrl + Maj + Tab</kbd></div>
+          <div class="krow"><span>Aller à la session 1 à 9</span><kbd>Alt + 1 … 9</kbd></div>
+          <div class="krow"><span>Détacher / rattacher la session</span><kbd>Ctrl + Maj + D</kbd></div>
+          <div class="krow"><span>Vue en grille</span><kbd>Ctrl + Maj + G</kbd></div>
+        </div>
+        <div class="card">
+          <h3>Affichage</h3>
+          <div class="krow"><span>Plein écran</span><kbd>F11</kbd></div>
+          <div class="krow"><span>Mode compact</span><kbd>F10</kbd></div>
+          <div class="krow"><span>Capture d'écran de la session</span><kbd>Ctrl + Maj + S</kbd></div>
+          <div class="krow"><span>Panneau Guides</span><kbd>Ctrl + Maj + J</kbd></div>
+        </div>
+        <div class="card">
+          <h3>Qualité vidéo</h3>
+          <div class="krow"><span>Faible</span><kbd>Ctrl + Alt + 1</kbd></div>
+          <div class="krow"><span>Moyen</span><kbd>Ctrl + Alt + 2</kbd></div>
+          <div class="krow"><span>Haut</span><kbd>Ctrl + Alt + 3</kbd></div>
+          <div class="krow"><span>Ultra</span><kbd>Ctrl + Alt + 4</kbd></div>
+        </div>
+        <div class="card">
+          <h3>Touches personnalisées</h3>
+          <div class="krow"><span>Activer / désactiver</span><kbd>Ctrl + Maj + K</kbd></div>
+          <div class="krow"><span>Mode édition</span><kbd>Ctrl + Maj + E</kbd></div>
+          <p style="margin-top:10px">Associe tes propres touches à des endroits de l'écran. Un appui = un seul tap, uniquement sur la session active.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guides">
+    <div class="wrap">
+      <div class="guides">
+        <div>
+          <h2>Les guides à côté du jeu</h2>
+          <p class="sub" style="margin-bottom:0">Un panneau qui s'ouvre à côté de ta session (<kbd>Ctrl + Maj + J</kbd>) pour consulter des sites utiles sans quitter la fenêtre. Il reprend la place libre à côté du jeu, et peut passer à gauche ou à droite. La liste est modifiable : ajoute tes propres sites.</p>
+          <div class="sites">
+            <a class="site" href="https://www.papycha.fr/" rel="noopener"><b>Papycha</b><span>papycha.fr</span></a>
+            <a class="site" href="https://www.krosmoz.com/fr/almanax" rel="noopener"><b>Almanax</b><span>krosmoz.com/fr/almanax</span></a>
+            <a class="site" href="https://lomitall.fr/#outils/touch/almanax" rel="noopener"><b>Lomitall</b><span>lomitall.fr — outils Dofus Touch</span></a>
+          </div>
+        </div>
+        <div class="barpic">
+          <img src="img/guides-bar.png" alt="Barre du panneau Guides avec les boutons Papycha, Almanax et Lomitall" width="342" height="62" loading="lazy">
+          <p>La barre du panneau Guides, dans l'application.<br>Sites tiers, non affiliés à notrefu-mirror.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -345,5 +445,38 @@
   </div>
 </footer>
 
+
+<script>
+(function () {
+  var themes = [
+    ["zinc", "Zinc violet", "#18181B", "#8B5CF6"],
+    ["electrique", "Bleu électrique", "#18181B", "#3B82F6"],
+    ["bonta", "Bonta", "#0e1a30", "#f0c64a"],
+    ["brakmar", "Brakmar", "#170c0e", "#e5473a"],
+    ["wabbit", "Wabbit", "#1f1409", "#ff8a1f"],
+    ["pandala", "Pandala", "#0d1f1c", "#3ddc97"],
+    ["frigost", "Frigost", "#0b1a24", "#7fd6f5"],
+    ["amakna", "Amakna", "#0f1d12", "#d9b44a"],
+    ["dofustouch", "Dofus Touch", "#221b14", "#9bd12b"],
+    ["clair", "Clair", "#f4f4f5", "#7c3aed"]
+  ];
+  var pick = document.getElementById("tpick"), img = document.getElementById("timg");
+  if (!pick || !img) return;
+  themes.forEach(function (t, i) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "tbtn"; b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.innerHTML = '<span class="dot" style="background:linear-gradient(135deg,' + t[2] + ' 50%,' + t[3] + ' 50%)"></span>' + t[1];
+    b.addEventListener("click", function () {
+      pick.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); });
+      b.setAttribute("aria-pressed", "true");
+      img.style.opacity = ".25";
+      var n = new Image();
+      n.onload = function () { img.src = n.src; img.alt = "Aperçu du thème " + t[1] + " dans notrefu-mirror"; img.style.opacity = "1"; };
+      n.src = "img/themes/" + t[0] + ".png";
+    });
+    pick.appendChild(b);
+  });
+})();
+</script>
 </body>
 </html>
